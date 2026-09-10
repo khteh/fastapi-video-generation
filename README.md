@@ -1,6 +1,6 @@
-# STEM Concept Video Service
+# FastAPI Video Service
 
-A service which generates a video to explain a STEM topic submitted by users.
+A FastAPI service which generates a video to explain a STEM topic submitted by users.
 
 - "How does the pH scale work?"
 - "Why do atoms form covalent bonds?"
