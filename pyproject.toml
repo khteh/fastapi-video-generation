@@ -1,0 +1,40 @@
+[project]
+name = "stem-video-service"
+version = "1.0.0"
+description = "Async FastAPI service that generates short STEM explainer videos (visuals + narrated audio), with pluggable simulated/AI generation providers."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "pydantic>=2.7,<3.0",
+    "pillow>=10.4,<12.0",
+    "numpy>=1.26,<3.0",
+    "python-dotenv>=1.0,<2.0",
+]
+
+[project.optional-dependencies]
+# Real AI/high-realism generation providers (requirement: "plug-and-play
+# of both simulated generation and real AI/video-generation providers").
+# Base install stays lightweight and fully offline-capable; opt in with:
+#   uv sync --extra ai
+ai = [
+    "anthropic>=0.40,<1.0",   # AnthropicScriptProvider — real LLM-authored scripts
+    "edge-tts>=6.1,<7.0",     # EdgeTTSNarrator — natural cloud neural voice
+    "piper-tts>=1.2,<2.0",    # PiperNarrator — natural offline neural voice
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0,<9.0",
+    "pytest-asyncio>=0.23,<1.0",
+    "httpx>=0.27,<1.0",
+]
+
+# This is an application, not a library: don't try to build/install it as an
+# importable package. `uv sync` just provisions a venv with the deps above.
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["test"]

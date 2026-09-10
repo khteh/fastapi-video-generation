@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+output/jobs/*.json
+output/videos/*.mp4
+!output/jobs/.gitkeep
+!output/videos/.gitkeep
+.DS_Store
+.env
+!.env.example
