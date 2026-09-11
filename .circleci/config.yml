@@ -55,7 +55,7 @@ jobs:
                     "DEBUG": true,
                     "TESTING": true,
                     "LOGLEVEL": "DEBUG",
-                    "SECRET_KEY": "FastAPIVideoGeneration"
+                    "SECRET_KEY": "fastapi-video-service"
             }
             EOF
       - run:
@@ -78,7 +78,7 @@ jobs:
           name: Build docker image
           command: |
             VERSION=$(uv run python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])").$CIRCLE_BUILD_NUM
-            docker build -t khteh/fastapivideogeneration:latest -t khteh/fastapivideogeneration:$VERSION .
+            docker build -t khteh/fastapi-video-service:latest -t khteh/fastapi-video-service:$VERSION .
       - run:
           name: Login to docker hub
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -87,8 +87,8 @@ jobs:
           command: |
             VERSION=$(uv run python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])").$CIRCLE_BUILD_NUM
             echo ${VERSION} > docker-build_number.txt
-            docker push khteh/fastapivideogeneration:latest
-            docker push khteh/fastapivideogeneration:$VERSION
+            docker push khteh/fastapi-video-service:latest
+            docker push khteh/fastapi-video-service:$VERSION
       - save_cache:
           key: v1-dependencies-{{ .Branch }}-{{ checksum "uv.lock" }}
           paths:
@@ -116,8 +116,8 @@ jobs:
       - run:
           name: Update FastAPI Video Generation application
           command: |
-            #kubectl patch statefulset fastapivideogeneration --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value":"'$AWS_ACCOUNT_ID'.dkr.ecr.ap-southeast-1.amazonaws.com/fastapivideogeneration:'$CIRCLE_BUILD_NUM_DOCKER'"}]'
-            kubectl set image sts/fastapivideogeneration fastapivideogeneration=$AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/fastapivideogeneration:$CIRCLE_BUILD_NUM_DOCKER
+            #kubectl patch statefulset fastapi-video-service --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value":"'$AWS_ACCOUNT_ID'.dkr.ecr.ap-southeast-1.amazonaws.com/fastapi-video-service:'$CIRCLE_BUILD_NUM_DOCKER'"}]'
+            kubectl set image sts/fastapi-video-service fastapi-video-service=$AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/fastapi-video-service:$CIRCLE_BUILD_NUM_DOCKER
   notification:
     docker:
       - image: "cimg/base:stable"
