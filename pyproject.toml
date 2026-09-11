@@ -1,5 +1,5 @@
 [project]
-name = "stem-video-service"
+name = "fastapi-video-service"
 version = "1.0.0"
 description = "Async FastAPI service that generates short STEM explainer videos (visuals + narrated audio), with pluggable simulated/AI generation providers."
 requires-python = ">=3.14"
