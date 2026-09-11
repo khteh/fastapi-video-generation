@@ -35,8 +35,7 @@ rest of the process's lifetime.
 """
 from __future__ import annotations
 
-import abc
-import wave
+import abc, wave, logging
 from pathlib import Path
 
 import numpy as np

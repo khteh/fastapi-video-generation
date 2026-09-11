@@ -30,7 +30,6 @@ from src.state.job_state import InvalidTransitionError, JobStateManager
 
 logger = logging.getLogger(__name__)
 
-
 class VideoWorkerPool:
     def __init__(
         self,
@@ -93,7 +92,20 @@ class VideoWorkerPool:
             try:
                 await job_task
             except asyncio.CancelledError:
-                pass  # job cancelled; already recorded by _process_job's handler
+                # This fires in two distinct situations that must be told
+                # apart: (a) job_task was cancelled directly (e.g. DELETE
+                # /api/v1/videos/{job_id}) - the worker loop itself is
+                # fine and should continue to the next queued job; (b)
+                # this worker loop's own task was cancelled (e.g.
+                # VideoWorkerPool.stop() during shutdown) - cancelling an
+                # outer task that's awaiting an inner one propagates into
+                # the inner task too, so it lands here looking identical.
+                # Swallowing it in case (b) would leave this loop calling
+                # `await self._queue.get()` forever on an empty queue,
+                # hanging stop()'s `await asyncio.gather(*self._workers)`
+                # indefinitely. Task.cancelling() (3.11+) tells them apart.
+                if asyncio.current_task().cancelling() > 0:
+                    raise
             except Exception:  # pragma: no cover - defensive
                 logger.exception("Worker %d crashed processing job %s", worker_index, job_id)
             finally:

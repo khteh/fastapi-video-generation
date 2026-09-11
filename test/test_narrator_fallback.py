@@ -6,19 +6,17 @@ network, network drops mid-session, then recovers).
 """
 from __future__ import annotations
 
-import wave
+import wave, pytest
 from pathlib import Path
-
-import pytest
-
 from src.generation.narrator import (
+    EdgeTTSNarrator,
     FallbackNarrator,
     FliteNarrator,
     NarrationUnavailableError,
+    PiperNarrator,
     ToneNarrator,
     select_narrator,
 )
-
 
 class _AlwaysFailsNarrator:
     """Simulates a narrator whose is_available() check passes (e.g. package
@@ -163,28 +161,35 @@ async def test_select_ai_narrator_never_includes_flite_or_tone():
     assert "tone" not in narrator.name
 
 
+# after
 @pytest.mark.asyncio
-async def test_select_ai_narrator_fails_clearly_with_no_real_backend_available():
-    """On a machine with neither edge-tts nor Piper configured (this test
-    environment), select_ai_narrator() must resolve to something that
-    raises a clear, actionable NarrationUnavailableError on synthesis —
-    not silently produce audio via a different backend."""
+async def test_select_ai_narrator_fails_clearly_with_no_real_backend_available(monkeypatch):
+    """select_ai_narrator() must resolve to the dedicated sentinel and
+    fail clearly when NEITHER edge-tts nor Piper is actually usable.
+    Forced deterministically via monkeypatch rather than assumed from the
+    test environment's real package state — if `uv sync --extra ai` was
+    run, `edge_tts`/`piper` may genuinely be importable here, which would
+    make EdgeTTSNarrator/PiperNarrator.is_available() return True (that
+    check only confirms the package is installed, not that a real
+    backend is reachable) and resolve to a real narrator instead of the
+    sentinel, breaking a version of this test that assumed otherwise."""
     from src.generation import narrator as narrator_module
+
+    async def _always_unavailable(self) -> bool:
+        return False
+
+    monkeypatch.setattr(EdgeTTSNarrator, "is_available", _always_unavailable)
+    monkeypatch.setattr(PiperNarrator, "is_available", _always_unavailable)
 
     narrator_module._cache.clear()
     narrator = await narrator_module.select_ai_narrator()
 
-    # This test environment has neither edge-tts nor Piper configured, so
-    # this should be the dedicated sentinel. (If a future CI environment
-    # does have one configured, this assertion would need updating — but
-    # the "never flite/tone" guarantee above holds regardless.)
     assert narrator.name == "no-ai-voice-available"
 
     with pytest.raises(NarrationUnavailableError) as exc_info:
         await narrator.synthesize("test", Path("/tmp/unused.wav"))
     assert "edge-tts" in str(exc_info.value)
     assert "Piper" in str(exc_info.value)
-
 
 @pytest.mark.asyncio
 async def test_select_ai_narrator_is_cached_across_calls():

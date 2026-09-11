@@ -139,7 +139,7 @@ async def request_video(payload: VideoRequest, request: Request) -> JobSubmitted
     """
     if len(payload.topic) < settings.min_topic_length:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"topic must be at least {settings.min_topic_length} characters",
         )
 
@@ -158,7 +158,7 @@ async def request_video(payload: VideoRequest, request: Request) -> JobSubmitted
 
     if not classification.is_valid:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"topic rejected: {classification.reason}",
         )
 

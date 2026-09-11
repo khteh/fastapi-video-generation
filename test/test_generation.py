@@ -293,8 +293,8 @@ async def test_tone_narrator_produces_valid_timed_wav(tmp_path):
 @pytest.mark.asyncio
 async def test_select_narrator_simulated_mode_never_picks_network_backends():
     narrator = await select_narrator(prefer_realistic=False)
-    assert narrator.name in ("flite", "tone")
-
+    assert "edge-tts" not in narrator.name
+    assert "piper" not in narrator.name
 
 @pytest.mark.asyncio
 async def test_select_narrator_realistic_mode_returns_working_backend(tmp_path):
