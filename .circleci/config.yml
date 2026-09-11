@@ -58,6 +58,10 @@ jobs:
                     "SECRET_KEY": "FastAPIVideoGeneration"
             }
             EOF
+      - run:
+          name: Create required log directory
+          command: |
+            sudo mkdir -p /var/log/fastapi-video-generation
       - run: uv run pytest -v
       #- run:
       #    name: Wait for PostgreSQL Server
