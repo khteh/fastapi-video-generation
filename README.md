@@ -575,3 +575,7 @@ independent jobs with different `job_id`s. If that's undesirable for your
 use case, dedup would need to be added at the API layer (e.g. hashing
 `topic`+`difficulty` and checking `JobStateManager.list_all()` before
 creating a new job).
+
+## Continuous Integration:
+
+- Integrated with CircleCI
