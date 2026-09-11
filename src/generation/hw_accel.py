@@ -13,7 +13,7 @@ for flite speech-backend detection in narrator.py.
 """
 from __future__ import annotations
 
-import tempfile
+import logging, tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -73,7 +73,8 @@ async def _nvenc_actually_works() -> bool:
                 timeout=15.0,
             )
         return True
-    except SubprocessError:
+    except SubprocessError as e:
+        logging.exception(f"NVENC probe failed; falling back to CPU libx264: {e}")
         return False
 
 
@@ -98,5 +99,5 @@ async def select_video_codec() -> VideoCodec:
         _cached_codec = H264_NVENC
     else:
         _cached_codec = LIBX264
-
+    logging.info(f"Video codec selected: {_cached_codec.name}")
     return _cached_codec
