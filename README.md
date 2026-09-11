@@ -1,4 +1,4 @@
-# FastAPI Video Service
+# STEM Explainer Video Service (FastAPI)
 
 A FastAPI service which generates a video to explain a STEM topic submitted by users.
 
