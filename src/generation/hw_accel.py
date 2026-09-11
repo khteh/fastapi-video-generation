@@ -60,7 +60,7 @@ async def _nvenc_actually_works() -> bool:
                     "-f",
                     "lavfi",
                     "-i",
-                    "color=c=black:s=64x64:d=0.1",
+                    f"color=c=black:s={settings.video_width}x{settings.video_height}:d=0.1",
                     "-c:v",
                     "h264_nvenc",
                     "-pix_fmt",
