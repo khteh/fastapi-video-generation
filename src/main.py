@@ -71,7 +71,6 @@ async def lifespan(app: FastAPI):
     finally:
         await worker_pool.stop()
 
-
 app = FastAPI(
     title="STEM Concept Video Service",
     description=(
