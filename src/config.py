@@ -62,7 +62,7 @@ class Settings(metaclass=ConfigSingleton):
     def __new__(cls, *args, **kwargs):
         return super().__new__(cls)
     def __init__(self, environment="Development"):
-        with open('/etc/fastapi-video-generation_config.json', 'r') as f:
+        with open('/etc/fastapi-video-service_config.json', 'r') as f:
             config = json.load(f)
         self.LOGLEVEL = config['LOGLEVEL']
         self.SECRET_KEY = config["SECRET_KEY"] or "you-will-never-guess"
@@ -143,10 +143,10 @@ class Settings(metaclass=ConfigSingleton):
         When a formatted value is shorter than the specified field width, it’s usually right-justified in the field. The hyphen-minus (-) flag causes the value to be left-justified in the specified field instead.
         """
         if config["ENVIRONMENT"] == "development":
-            logging.basicConfig(filename='/var/log/fastapi-video-generation/log', filemode='w', format='%(asctime)s %(levelname)-8s %(message)s', level=self.LOGLEVEL, datefmt='%Y-%m-%d %H:%M:%S')
+            logging.basicConfig(filename='/var/log/fastapi-video-service/log', filemode='w', format='%(asctime)s %(levelname)-8s %(message)s', level=self.LOGLEVEL, datefmt='%Y-%m-%d %H:%M:%S')
         else:
             logging.basicConfig(handlers=[
-                TimedRotatingFileHandler(filename='/var/log/fastapi-video-generation/log', when='d', interval=1, backupCount=3),
+                TimedRotatingFileHandler(filename='/var/log/fastapi-video-service/log', when='d', interval=1, backupCount=3),
                 logging.StreamHandler(sys.stdout)
             ], format='%(asctime)s %(levelname)-8s %(message)s', level=self.LOGLEVEL, datefmt='%Y-%m-%d %H:%M:%S')
 

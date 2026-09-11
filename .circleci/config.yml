@@ -49,7 +49,7 @@ jobs:
           name: Create required config file
           command: |
             sudo mkdir -p /etc
-            sudo tee /etc/fastapi-video-generation_config.json > /dev/null \<<EOF
+            sudo tee /etc/fastapi-video-service_config.json > /dev/null \<<EOF
             {
                     "ENVIRONMENT": "development",
                     "DEBUG": true,
@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Create required log directory
           command: |
-            sudo mkdir -p /var/log/fastapi-video-generation
+            sudo mkdir -p /var/log/fastapi-video-service
       - run: uv run pytest -v
       #- run:
       #    name: Wait for PostgreSQL Server
