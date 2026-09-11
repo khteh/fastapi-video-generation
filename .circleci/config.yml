@@ -46,18 +46,18 @@ jobs:
       - run: uv sync --extra ai
       - run: uv pip install --group dev
       - run:
-        name: Create required config file
-        command: |
-          sudo mkdir -p /etc
-          sudo tee /etc/fastapi-video-generation_config.json > /dev/null <<EOF
-          {
-                  "ENVIRONMENT": "development",
-                  "DEBUG": true,
-                  "TESTING": true,
-                  "LOGLEVEL": "DEBUG",
-                  "SECRET_KEY": "FastAPIVideoGeneration"
-          }
-          EOF
+          name: Create required config file
+          command: |
+            sudo mkdir -p /etc
+            sudo tee /etc/fastapi-video-generation_config.json > /dev/null <<EOF
+            {
+                    "ENVIRONMENT": "development",
+                    "DEBUG": true,
+                    "TESTING": true,
+                    "LOGLEVEL": "DEBUG",
+                    "SECRET_KEY": "FastAPIVideoGeneration"
+            }
+            EOF
       - run: uv run pytest -v
       #- run:
       #    name: Wait for PostgreSQL Server
