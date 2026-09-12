@@ -12,7 +12,7 @@ import re
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
-
+from src.config import settings
 from pydantic import BaseModel, Field, field_validator
 
 _HAS_LETTER = re.compile(r"[a-zA-Z]")
@@ -50,8 +50,8 @@ class VideoRequest(BaseModel):
     topic: str = Field(
         ...,
         description="The STEM topic or question to explain, e.g. 'How does the pH scale work?'",
-        min_length=1,
-        max_length=1024,
+        min_length=settings.min_topic_length,
+        max_length=settings.max_topic_length,
     )
     difficulty: DifficultyLevel = Field(
         default=DifficultyLevel.beginner,

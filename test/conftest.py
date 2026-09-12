@@ -16,29 +16,22 @@ end-to-end confidence over raw test speed.
 """
 from __future__ import annotations
 
-import asyncio
-import os
-import shutil
-import tempfile
+import asyncio, os, shutil, tempfile
 from pathlib import Path
+from src.config import settings
 
 _TEST_DATA_ROOT = Path(tempfile.mkdtemp(prefix="stemvideo_test_"))
-os.environ.setdefault("VIDEO_JOBS_DIR", str(_TEST_DATA_ROOT / "jobs"))
-os.environ.setdefault("VIDEO_ARTIFACTS_DIR", str(_TEST_DATA_ROOT / "artifacts"))
-os.environ.setdefault("VIDEO_WIDTH", "480")
-os.environ.setdefault("VIDEO_HEIGHT", "270")
-os.environ.setdefault("VIDEO_FPS", "10")
-os.environ.setdefault("VIDEO_NUM_WORKERS", "2")
-# Tests always use the offline "simulated" provider — fast, deterministic,
-# no API keys/network required. The "ai" provider has its own dedicated,
-# availability-gated tests in test_providers.py.
-os.environ.setdefault("GENERATION_PROVIDER", "simulated")
-
+settings.jobs_dir = _TEST_DATA_ROOT / "jobs"
+settings.artifacts_dir = _TEST_DATA_ROOT / "artifacts"
+settings.video_width = 480
+settings.video_height = 270
+settings.video_fps = 10
+settings.num_workers = 2
+settings.generation_provider = "simulated"
+print(f"pytest: isolated test data root: {_TEST_DATA_ROOT}, VIDEO_JOBS_DIR: {settings.jobs_dir}, VIDEO_ARTIFACTS_DIR: {settings.artifacts_dir}")
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-
 from src.main import app
-
 
 @pytest_asyncio.fixture
 async def client():

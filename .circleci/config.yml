@@ -51,11 +51,38 @@ jobs:
             sudo mkdir -p /etc
             sudo tee /etc/fastapi-video-service_config.json > /dev/null \<<EOF
             {
-                    "ENVIRONMENT": "development",
-                    "DEBUG": true,
-                    "TESTING": true,
-                    "LOGLEVEL": "DEBUG",
-                    "SECRET_KEY": "fastapi-video-service"
+              "ENVIRONMENT": "development",
+              "DEBUG": true,
+              "TESTING": true,
+              "LOGLEVEL": "DEBUG",
+              "SECRET_KEY": "FastAPIVideoService",
+              "GENERATION_PROVIDER": "simulated",
+              "VIDEO_ANTHROPIC_MODEL": "claude-sonnet-5",
+              "VIDEO_ANTHROPIC_CLASSIFIER_MODEL": "claude-haiku-4-5-20251001",
+
+              "VIDEO_NUM_WORKERS": 2,
+
+              "VIDEO_JOBS_DIR": "output/jobs",
+              "VIDEO_ARTIFACTS_DIR": "output/videos",
+
+              "VIDEO_MIN_TOPIC_LENGTH": 5,
+              "VIDEO_MAX_TOPIC_LENGTH": 1024,
+              "VIDEO_MAX_DURATION_SECONDS": 90,
+
+              "VIDEO_FPS": 10,
+              "VIDEO_TTS_SAMPLE_RATE": 22050,
+
+              "VIDEO_WIDTH": 480,
+              "VIDEO_HEIGHT": 270,
+
+              "VIDEO_FLITE_VOICE": "kal",
+              "VIDEO_EDGE_TTS_VOICE": "en-US-AndrewNeural",
+              "VIDEO_PIPER_MODEL_PATH": "/opt/voice-models/en_US-lessac-medium.onnx",
+
+              "VIDEO_HW_ACCEL": "auto", 
+
+              "VIDEO_FFMPEG_BINARY": "ffmpeg",
+              "VIDEO_FFPROBE_BINARY": "ffprobe"
             }
             EOF
       - run:

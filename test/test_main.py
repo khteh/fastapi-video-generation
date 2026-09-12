@@ -140,19 +140,23 @@ async def test_duration_at_90_seconds_is_accepted(client):
 
 
 @pytest.mark.asyncio
-async def test_topic_over_1024_characters_is_rejected(client):
-    topic = "Why does " + ("water " * 200) + "boil?"  # well over 1024 chars
-    assert len(topic) > 1024
+async def test_topic_over_max_length_is_rejected(client):
+    from src.config import settings
+    limit = settings.max_topic_length
+    topic = "Why does " + ("water " * ((limit // 6) + 5)) + "boil?"
+    assert len(topic) > limit
     resp = await client.post("/api/v1/videos", json={"topic": topic})
     assert resp.status_code == 422
 
 
 @pytest.mark.asyncio
-async def test_topic_at_1024_characters_is_accepted(client):
+async def test_topic_at_max_length_is_accepted(client):
     # Pad a real question out to exactly the 1024-character limit.
+    from src.config import settings
+    limit = settings.max_topic_length
     base = "How does the pH scale work? "
-    topic = (base * (1024 // len(base) + 1))[:1024]
-    assert len(topic) == 1024
+    topic = (base * (limit // len(base) + 1))[:limit]
+    assert len(topic) == limit
     resp = await client.post("/api/v1/videos", json={"topic": topic})
     assert resp.status_code == 202
 

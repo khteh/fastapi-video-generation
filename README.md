@@ -303,13 +303,13 @@ instead of exporting environment variables by hand — it's loaded
 automatically at startup via [python-dotenv](https://pypi.org/project/python-dotenv/).
 
 A ready-to-edit `.env` is included (defaults to `GENERATION_PROVIDER=simulated`);
-`.env.example` documents every available option. `.env` is gitignored, so
+`fastapi-video-service_config.json.example` documents every available option. `.env` is gitignored, so
 it's a safe place to put secrets like `ANTHROPIC_API_KEY` locally — real
 environment variables (e.g. ones set by a deploy platform) always take
 precedence over whatever's in `.env`.
 
 ```bash
-cp .env.example .env   # if you don't already have one
+cp fastapi-video-service_config.json.example /etc/fastapi-video-service_config.json   # if you don't already have one
 # edit .env to set GENERATION_PROVIDER=ai and your ANTHROPIC_API_KEY, etc.
 ```
 
