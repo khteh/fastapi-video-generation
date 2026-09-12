@@ -434,7 +434,7 @@ budget for.
   a Piper voice model download and/or an `ANTHROPIC_API_KEY` — see "Voice
   authenticity" above.
 
-## Configuration (environment variables)
+## Configuration (/etc/fastapi-video-service_config.json)
 
 | Variable                                       | Default                     | Meaning                                                                                            |
 | ---------------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------- |
