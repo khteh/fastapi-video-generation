@@ -296,13 +296,15 @@ curl -OJ http://localhost:8000/api/v1/videos/<job_id>/download   # save the mp4
 # or just open http://localhost:8000/api/v1/videos/<job_id>/download in a browser tab
 ```
 
-## Configuration via .env
+## Configuration via /etc/fastapi-video-service_config.json
 
-All settings (see the table below) can be set via a local `.env` file
+All settings (see the table below) can be set via a local `/etc/fastapi-video-service_config.json` file
 instead of exporting environment variables by hand — it's loaded
 automatically at startup via [python-dotenv](https://pypi.org/project/python-dotenv/).
 
-A ready-to-edit `.env` is included (defaults to `GENERATION_PROVIDER=simulated`);
+All API keys are set in `.env` locally or through secrets when deployed in k8s.
+
+A ready-to-edit config is included (defaults to `GENERATION_PROVIDER=simulated`);
 `fastapi-video-service_config.json.example` documents every available option. `.env` is gitignored, so
 it's a safe place to put secrets like `ANTHROPIC_API_KEY` locally — real
 environment variables (e.g. ones set by a deploy platform) always take
@@ -310,7 +312,7 @@ precedence over whatever's in `.env`.
 
 ```bash
 cp fastapi-video-service_config.json.example /etc/fastapi-video-service_config.json   # if you don't already have one
-# edit .env to set GENERATION_PROVIDER=ai and your ANTHROPIC_API_KEY, etc.
+# edit /etc/fastapi-video-service_config.json to set GENERATION_PROVIDER=ai and your ANTHROPIC_API_KEY, etc.
 ```
 
 ## Running with uv
@@ -368,9 +370,9 @@ libx264, controlled by `VIDEO_HW_ACCEL`:
 - **`cpu`** — always use libx264, skip GPU detection entirely.
 
 ```bash
-# .env — usually you don't need to set this at all; "auto" already does
+# /etc/fastapi-video-service_config.json — usually you don't need to set this at all; "auto" already does
 # the right thing whether or not a GPU is present.
-VIDEO_HW_ACCEL=auto
+"VIDEO_HW_ACCEL": "auto"
 ```
 
 **Why a real encode, not just a feature check**: an ffmpeg build can have
@@ -394,16 +396,16 @@ not the resulting codec.
 
 ## Generating 4K video
 
-Set `VIDEO_WIDTH=3840` and `VIDEO_HEIGHT=2160` (in `.env` or as environment
+Set `VIDEO_WIDTH=3840` and `VIDEO_HEIGHT=2160` (in `/etc/fastapi-video-service_config.json` or as environment
 variables) to render at 4K instead of the 720p default. The slide layout
 (text, diagrams, footer) scales proportionally with resolution — 4K
 output is a genuinely crisp, properly laid-out 4K frame, not just a
 720p-sized layout stretched onto a bigger canvas.
 
 ```bash
-# .env
-VIDEO_WIDTH=3840
-VIDEO_HEIGHT=2160
+# /etc/fastapi-video-service_config.json
+"VIDEO_WIDTH": 3840
+"VIDEO_HEIGHT": 2160
 ```
 
 **Performance note**: this repo's ffmpeg build does CPU-only H.264
