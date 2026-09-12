@@ -19,7 +19,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from logging.handlers import TimedRotatingFileHandler
 from dotenv import load_dotenv
-from pydantic import config
 
 # Load variables from a `.env` file in the current working directory (or
 # the nearest parent) into os.environ, without overriding anything already
