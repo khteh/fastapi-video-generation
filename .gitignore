@@ -8,4 +8,3 @@ output/videos/*.mp4
 !output/videos/.gitkeep
 .DS_Store
 .env
-!.env.example
