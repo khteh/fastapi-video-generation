@@ -228,7 +228,7 @@ voice — no silent downgrade to anything robotic:
    ```bash
    pip install piper-tts   # or: uv run pip install piper-tts
    python -m piper.download_voices en_US-lessac-medium
-   export VIDEO_PIPER_MODEL_PATH=/path/to/en_US-lessac-medium.onnx
+   "VIDEO_PIPER_MODEL_PATH": "/path/to/en_US-lessac-medium.onnx"
    ```
 
 If **neither** works, the job fails with a clear
@@ -320,13 +320,12 @@ uv sync                                  # base install: fully offline "simulate
 uv run uvicorn src.main:app --reload
 ```
 
-To use the real-AI provider, set `GENERATION_PROVIDER=ai` and
-`ANTHROPIC_API_KEY` in your `.env` file (recommended — see above), or
+To use the real-AI provider, set `GENERATION_PROVIDER=ai` in '/etc/fastapi-video-service_config.json' and
+set `ANTHROPIC_API_KEY` in your `.env` file (recommended — see above), or
 export them directly:
 
 ```bash
 uv sync --extra ai                       # installs anthropic, edge-tts, piper-tts
-export GENERATION_PROVIDER=ai
 export ANTHROPIC_API_KEY=sk-ant-...      # for real, question-specific scripts
 uv run uvicorn src.main:app --reload
 ```
